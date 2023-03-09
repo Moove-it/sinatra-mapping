@@ -1,35 +1,13 @@
-require 'yaml'
+Gem::Specification.new do |s|
+  s.name                  = 'sinatra-mapping'
+  s.version               = '1.3.0'
+  s.platform              = Gem::Platform::RUBY
 
-@version  = YAML.load_file("VERSION")
-@info     = YAML.load_file("INFO")
-@manifest = `git ls-files`.split.sort.reject{ |out| out =~ /^\./ || out =~ /^doc/ }
-@spec     = Gem::Specification.new do |gemspec|
-  gemspec.platform = Gem::Platform::RUBY
-  gemspec.version  = [ @version[:major], @version[:minor], @version[:patch], @version[:release] ].compact.join('.')
-  gemspec.date     = @version[:date]
+  s.authors               = ['Hallison Batista', 'Adrian Gomez']
+  s.summary               = 'Sinatra mapping extension for web application.'
+  s.description           = 'Sinatra mapping extension is a minimal module that is useful for create map names for Sinatra web application.'
 
-  @info.each do |info, value|
-    gemspec.send("#{info}=", value) if gemspec.respond_to? "#{info}="
-  end
+  s.files                 = Dir.glob('{lib}/**/*') + %w(LICENSE README.rdoc)
 
-  @info[:dependencies].each do |name, version|
-    gemspec.add_dependency name, version
-  end
-
-  @info[:development_dependencies].each do |name, version|
-    gemspec.add_development_dependency name, version
-  end
-
-  gemspec.require_paths = %w[lib]
-  gemspec.files = @manifest
-  gemspec.test_files = gemspec.files.select{ |path| path =~ /^test\/test_.*.rb/ }
-
-  gemspec.has_rdoc = true
-  gemspec.extra_rdoc_files = %w[README.rdoc LICENSE]
-
-  gemspec.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Sinatra - Mapping", "--main", "README.rdoc"]
-  gemspec.rubyforge_project = gemspec.name
-  gemspec.rubygems_version = "1.3.3"
-end if @version || @info # Gem::Specification
-
-
+  s.add_dependency('sinatra', '>= 1.3')
+end
